@@ -1,0 +1,25 @@
+{
+  "name": "umami-cron-reporting",
+  "version": "1.0.0",
+  "description": "cron save reporting  for umami",
+  "main": "script.js",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "images-pdf": "^1.0.3",
+    "puppeteer": "^13.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeremDlcn/umami-cron-reporting.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JeremDlcn/umami-cron-reporting/issues"
+  },
+  "homepage": "https://github.com/JeremDlcn/umami-cron-reporting#readme"
+}
