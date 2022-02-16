@@ -6,6 +6,7 @@
   "dependencies": {
     "dotenv": "^16.0.0",
     "images-pdf": "^1.0.3",
+    "pdf-actions": "^1.0.8",
     "puppeteer": "^13.3.2"
   },
   "devDependencies": {},
