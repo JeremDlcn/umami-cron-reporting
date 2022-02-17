@@ -1,8 +1,11 @@
-const puppeteer = require('puppeteer');
-require('dotenv').config();
 const ImagesToPDF = require('images-pdf');
-import { createPDF, splitPDF } from "pdf-actions";
-import JSZip from "jszip";
+const puppeteer = require('puppeteer');
+const fs = require('fs');
+require('dotenv').config();
+
+
+//Check if the folder "files" exist
+if (!fs.existsSync('files')) fs.mkdirSync(`files`);
 
 (async () => {
     const browser = await puppeteer.launch({
@@ -34,32 +37,26 @@ import JSZip from "jszip";
     const data = await page.evaluate(() => {
         let final = [];
         document.querySelectorAll('div.Table_body__1_740 .row a').forEach(elt => {
-            final.push(elt.href)
+            final.push({name: elt.textContent ,url:elt.href})
         })
         return final
     })
-    for (const [i, url] of data.entries()) {
-        await page.goto(url);
+    for (const [i, site] of data.entries()) {
+        await page.goto(site.url);
         await page.waitForSelector('.rsm-geographies')
         await page.waitForTimeout(1000)
-        await page.screenshot({ path: `images/umami-export${i}.png`, fullPage: true })
-        console.log(`Screenshots taken ✨`);
+        if (!fs.existsSync(`files/${site.name}`)) fs.mkdirSync(`files/${site.name}`);
+        await page.screenshot({ path: `files/${site.name}/umami-export${i}.png`, fullPage: true })
+        new ImagesToPDF.ImagesToPDF().convertFolderToPDF(`files/${site.name}`, `files/${site.name}/Reporting-${site.name}.pdf`);
     }
-    new ImagesToPDF.ImagesToPDF().convertFolderToPDF('images', `output/umami.pdf`);
 
-    const splitPDFHandler = async (files) => {
-        const zip = new JSZip();
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const pdfFile = await createPDF.PDFDocumentFromFile(file);
-            const splitPDF = await splitPDF(pdfFile, file.range, {degree: file.degrees})
-            const pdfFile = await splitPDF.save();
-                zip.file(`split-${file.name}`, pdfFile);
-        }
-        await zip.generateAsync({ type: "blob" }).then(function (content) {
-            saveAs(content, "splitPDFFiles.zip");
-        });
-    };
+
+
+
+
+
+
+
 
     await browser.close();
 })();
