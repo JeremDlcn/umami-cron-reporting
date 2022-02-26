@@ -1,4 +1,5 @@
 # Module to export data from Umami into PDFs
+This script allow to export reporting of umami and send them to a specific email adress.
 
 ## Installation
 create a .env file that contains:
@@ -19,3 +20,7 @@ finally you can launch the script manually or by a cron task with the command:
 ```
 node script.js
 ```
+
+## Output
+This script will send pdf files by email for every websites you have in your umami.
+One website = one pdf.
