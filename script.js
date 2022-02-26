@@ -2,6 +2,8 @@ const ImagesToPDF = require('images-pdf');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 require('dotenv').config();
+const nodemailer = require('nodemailer');
+const path = require('path');
 
 
 //Check if the folder "files" exist
@@ -53,3 +55,39 @@ if (!fs.existsSync('files')) fs.mkdirSync(`files`);
 
     await browser.close();
 })();
+
+//vars for email
+let fullPath = path.resolve('./files/Reporting.pdf');
+const dateForContent = new Date();
+
+// Email
+let transporter = nodemailer.createTransport(
+    {
+        host: 'smtp-mail.outlook.com',
+        secureConnection: false,
+        port: 587,
+        tls:{
+            ciphers: 'SSLv3'
+        },
+        auth:{
+            user: process.env.SENDER_EMAIL,
+            pass: process.env.SENDER_PASS
+        }
+    });
+
+let message = {
+    from: process.env.SENDER_EMAIL,
+    to: process.env.RECEIVER_EMAIL,
+    subject: 'Monthly Reporting ' + dateForContent.toLocaleString('default', { month: 'long', year: 'numeric' }).replace(/^\w/, c => c.toUpperCase()),
+    text: 'Reportings in attachments',
+    attachments: [
+        {
+            filename: 'Reporting.pdf',
+            path: fullPath,
+            contentType: 'application/pdf'
+        }
+    ]
+}
+
+transporter.sendMail(message)
+transporter.close();
