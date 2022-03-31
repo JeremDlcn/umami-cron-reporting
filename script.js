@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
 
 
 (async () => {
-    const browser = await puppeteer.launch({headless: false, ignoreHTTPSErrors: true});
+    const browser = await puppeteer.launch({headless: true, ignoreHTTPSErrors: true});
     const page = await browser.newPage();
     await page.setViewport({width: 1060,height: 745});
     await page.goto(process.env.URL);
